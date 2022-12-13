@@ -1,7 +1,7 @@
-const ROUNDS = 10;
-
 const bcrypt = require('bcrypt');
-const Model = require('sequelize');
+const { Model } = require('sequelize');
+
+const ROUNDS = 10;
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {

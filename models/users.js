@@ -1,3 +1,5 @@
+const ROUNDS = 10;
+
 const bcrypt = require('bcrypt');
 const Model = require('sequelize');
 
@@ -23,7 +25,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      validate: { notEmpty: true },
+      validate: {
+        notEmpty: true,
+        isEmail: true,
+      },
       allowNull: false,
     },
     avatar: DataTypes.STRING,
@@ -33,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   User.beforeSave(async (user) => {
     if (user.changed('password')) {
-      user.password = await bcrypt.hash(user.password, 10, null);
+      user.password = await bcrypt.hash(user.password, ROUNDS);
     }
   });
   User.prototype.comparePassword = function compare(password) {

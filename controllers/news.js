@@ -1,5 +1,5 @@
 const { News, User } = require('../models');
-const { BAD_REQUEST, OK } = require('../constants/responseCodes');
+const { INTERNAL_SERVER_ERROR, OK } = require('../constants/responseCodes');
 
 module.exports = {
   async findAllNews(req, res) {
@@ -25,7 +25,7 @@ module.exports = {
       });
       return res.status(OK).send(news);
     } catch (error) {
-      return res.status(BAD_REQUEST).send(error);
+      return res.status(INTERNAL_SERVER_ERROR).send(error);
     }
   },
 };

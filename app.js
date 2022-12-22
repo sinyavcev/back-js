@@ -1,8 +1,10 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 
-const usersRouter = require('./routes/news');
+const newsRouter = require('./routes/news');
+const userRouter = require('./routes/user');
 const { NOT_FOUND, INTERNAL_SERVER_ERROR } = require('./constants/responseCodes');
 
 const app = express();
@@ -10,8 +12,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
-app.use('/news', usersRouter);
+app.use('/news', newsRouter);
+app.use('/user/', userRouter);
 
 app.use((req, res, next) => {
   next(createError(NOT_FOUND));

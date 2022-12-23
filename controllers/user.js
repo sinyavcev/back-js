@@ -13,7 +13,7 @@ const {
   USER_NOT_FOUND,
   WRONG_PASSWORD,
   USER_UNAUTHORIZED,
-} = require('../constants/errors');
+} = require('../constants/responseMessages');
 const { User } = require('../models');
 const generateToken = require('../utils/generateToken');
 
@@ -77,6 +77,10 @@ module.exports = {
         password,
       };
 
+      if (!userData.email || !userData.password) {
+        return res.status(BAD_REQUEST).send(NO_DATA);
+      }
+
       const user = await User.findOne({ where: { email: userData.email } });
 
       if (!user) {
@@ -104,9 +108,9 @@ module.exports = {
   },
   async checkUser(req, res) {
     try {
-      res.status(OK).send(req.user);
+      return res.status(OK).send(req.user);
     } catch (error) {
-      res.status(UNAUTHORIZED).send(USER_UNAUTHORIZED);
+      return res.status(UNAUTHORIZED).send(USER_UNAUTHORIZED);
     }
   },
 };

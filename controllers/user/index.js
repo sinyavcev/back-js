@@ -1,11 +1,9 @@
 const { registration } = require('./registration');
 const { login } = require('./login');
-const { checkUser } = require('./checkUser');
+const { whoAmI } = require('./whoAmI');
 
 module.exports = {
-  user: {
-    registration,
-    login,
-    checkUser,
-  },
+  registration,
+  login,
+  whoAmI,
 };

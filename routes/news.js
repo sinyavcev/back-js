@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const { findAllNews } = require('../controllers/news').news;
+const { findAllNews } = require('../controllers/news');
 
 router.get('/', findAllNews);
 

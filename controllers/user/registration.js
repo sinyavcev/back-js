@@ -12,18 +12,18 @@ module.exports = {
         body: {
           email,
           password,
-          name,
+          login,
         },
       } = req;
 
       const userData = {
         email: email?.trim(),
-        name: name?.trim(),
+        login: login?.trim(),
         password,
       };
 
       if (!userData.email
-       || !userData.name
+       || !userData.login
        || !userData.password) {
         return res.status(BAD_REQUEST).send(NO_DATA);
       }
@@ -31,7 +31,7 @@ module.exports = {
       const candidate = await User.findOne({
         where: {
           [Op.or]: [
-            { name: userData.name },
+            { login: userData.login },
             { email: userData.email },
           ],
         },
@@ -47,7 +47,7 @@ module.exports = {
       return res.status(CREATED).send({
         user: {
           id: user.id,
-          name: user.name,
+          login: user.login,
           email: user.email,
         },
         token,

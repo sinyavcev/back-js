@@ -7,7 +7,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
+      login: {
         allowNull: false,
         validate: { notEmpty: true },
         type: Sequelize.STRING,

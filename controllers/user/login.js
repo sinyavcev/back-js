@@ -16,22 +16,15 @@ module.exports = {
     try {
       const { body: { email, password } } = req;
 
-      const userData = {
-        email: email?.trim(),
-        password,
-      };
+      if (!email?.trim() || !password) return res.status(BAD_REQUEST).send(NO_DATA);
 
-      if (!userData.email || !userData.password) {
-        return res.status(BAD_REQUEST).send(NO_DATA);
-      }
-
-      const user = await User.findOne({ where: { email: userData.email } });
+      const user = await User.findOne({ where: { email: email.trim() } });
 
       if (!user) {
         return res.status(NOT_FOUND).send(USER_NOT_FOUND);
       }
 
-      const isValidPassword = await user.comparePassword(userData.password);
+      const isValidPassword = await user.comparePassword(password);
 
       if (!isValidPassword) {
         return res.status(BAD_REQUEST).send(WRONG_PASSWORD);

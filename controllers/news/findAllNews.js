@@ -1,5 +1,5 @@
-const { News, User } = require('../models');
-const { INTERNAL_SERVER_ERROR, OK } = require('../constants/responseCodes');
+const { News, User } = require('../../models');
+const { INTERNAL_SERVER_ERROR, OK } = require('../../constants/responseCodes');
 
 module.exports = {
   async findAllNews(req, res) {

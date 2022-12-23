@@ -11,6 +11,5 @@
         "ecmaVersion": "latest"
     },
     "rules": {
-        "treatUndefinedAsUnspecified": false 
     }
 }

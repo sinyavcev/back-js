@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const passport = require('passport')
 
 const newsRouter = require('./routes/news');
 const userRouter = require('./routes/user');
@@ -13,6 +14,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
+app.use(passport.initialize())
+require('./middleware/passport')(passport)
+
 
 app.use('/news', newsRouter);
 app.use('/user/', userRouter);

@@ -1,25 +1,29 @@
-const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
-const { BAD_REQUEST, OK, CREATED, NOT_FOUND } = require('../constants/responseCodes');
+
+const {
+  BAD_REQUEST,
+  OK,
+  CREATED,
+  NOT_FOUND,
+  UNAUTHORIZED,
+} = require('../constants/responseCodes');
 const {
   NO_DATA,
   USER_EXIST,
   USER_NOT_FOUND,
   WRONG_PASSWORD,
-} = require("../constants/errors");
-
+  USER_UNAUTHORIZED,
+} = require('../constants/errors');
 const { User } = require('../models');
-const {generateToken} = require('../utils/generateToken')
-
-
+const generateToken = require('../utils/generateToken');
 
 module.exports = {
   async registration(req, res) {
     try {
       const {
-        body: { 
+        body: {
           email,
-          password, 
+          password,
           name,
         },
       } = req;
@@ -27,13 +31,12 @@ module.exports = {
       const userData = {
         email: email?.trim(),
         name: name?.trim(),
-        password: password?.trim(),
+        password,
       };
 
       if (!userData.email
        || !userData.name
        || !userData.password) {
-
         return res.status(BAD_REQUEST).send(NO_DATA);
       }
 
@@ -53,7 +56,14 @@ module.exports = {
       const user = await User.create(userData);
 
       const token = generateToken(user.id);
-      return res.status(CREATED).send({ user:{id,email,name}, token });
+      return res.status(CREATED).send({
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+        token,
+      });
     } catch (error) {
       return res.status(BAD_REQUEST).send(error.message);
     }
@@ -61,10 +71,10 @@ module.exports = {
   async login(req, res) {
     try {
       const { body: { email, password } } = req;
-      
+
       const userData = {
         email: email?.trim(),
-        password: password?.trim(),
+        password,
       };
 
       const user = await User.findOne({ where: { email: userData.email } });
@@ -80,13 +90,23 @@ module.exports = {
       }
 
       const token = generateToken(user.id);
-      return res.status(OK).send({ user:{id, email}, token });
+      return res.status(OK).send({
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+        token,
+      });
     } catch (error) {
       return res.status(BAD_REQUEST).send(error.message);
     }
   },
-  async checkUser(req, res) { //tru/catch
-    const token = generateToken(req.user.id, req.user.email);
-    res.status(OK).send(req.user);//
+  async checkUser(req, res) {
+    try {
+      res.status(OK).send(req.user);
+    } catch (error) {
+      res.status(UNAUTHORIZED).send(USER_UNAUTHORIZED);
+    }
   },
 };

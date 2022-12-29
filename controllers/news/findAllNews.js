@@ -18,7 +18,7 @@ module.exports = {
           as: 'user',
           attributes: [
             'id',
-            'name',
+            'login',
             'avatar',
           ],
         },

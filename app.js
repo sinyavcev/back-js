@@ -5,6 +5,7 @@ const cors = require('cors');
 const passport = require('passport');
 
 const newsRouter = require('./routes/news');
+const userRouter = require('./routes/user');
 const authRouter = require('./routes/auth');
 const { NOT_FOUND, INTERNAL_SERVER_ERROR } = require('./constants/responseCodes');
 
@@ -19,6 +20,7 @@ require('./middleware/passport')(passport);
 
 app.use('/auth', authRouter);
 app.use('/news', newsRouter);
+app.use('/user', userRouter);
 
 app.use((req, res, next) => {
   next(createError(NOT_FOUND));

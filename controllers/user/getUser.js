@@ -1,12 +1,12 @@
 const { News, User } = require('../../models');
-const { INTERNAL_SERVER_ERROR, OK } = require('../../constants/responseCodes');
+const { INTERNAL_SERVER_ERROR, OK, NOT_FOUND } = require('../../constants/responseCodes');
+const { USER_NOT_FOUND } = require('../../constants/responseMessages');
 
 module.exports = {
-  async findUser(req, res) {
+  async getUser(req, res) {
     try {
-      const { id } = req.params;
       const user = await User.findByPk(
-        id,
+        req.params.id,
         {
           include: {
             model: News,
@@ -15,6 +15,7 @@ module.exports = {
           attributes: ['id', 'email', 'login', 'avatar'],
         },
       );
+      if (!user) return res.status(NOT_FOUND).send(USER_NOT_FOUND);
       return res.status(OK).send(user);
     } catch (error) {
       return res.status(INTERNAL_SERVER_ERROR).send(error);

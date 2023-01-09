@@ -14,7 +14,7 @@ module.exports = (passport) => {
         const user = await User.findByPk(
           payload,
           {
-            attributes: ['id', 'email', 'login'],
+            attributes: ['id', 'email', 'login', 'avatar'],
           },
         );
         if (user) {

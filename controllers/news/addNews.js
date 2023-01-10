@@ -10,27 +10,23 @@ module.exports = {
           title,
           content,
           tags,
-          userId,
         },
-        file: {
-          path,
+        user: {
+          id,
         },
+        file,
       } = req;
 
-      if (!title
-        || !content
-        || !userId
-        || !tags) {
-        return res.status(BAD_REQUEST).send(NO_DATA);
-      }
+      if (!title?.trim()
+      || !content?.trim()
+      || !tags?.trim()) return res.status(BAD_REQUEST).send(NO_DATA);
 
-      const image = path || '';
       const news = await News.create({
         title,
+        userId: id,
         content,
-        image,
+        image: file?.path || '',
         tags,
-        userId,
       });
 
       return res.status(CREATED).send(news);

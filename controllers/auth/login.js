@@ -34,8 +34,9 @@ module.exports = {
       return res.status(OK).send({
         user: {
           id: user.id,
-          name: user.name,
+          login: user.login,
           email: user.email,
+          avatar: user.avatar,
         },
         token,
       });

@@ -1,5 +1,3 @@
-const { Op } = require('sequelize');
-
 const { User } = require('../../models');
 const { INTERNAL_SERVER_ERROR, OK, BAD_REQUEST } = require('../../constants/responseCodes');
 const { USER_EXIST } = require('../../constants/responseMessages');
@@ -10,35 +8,32 @@ module.exports = {
       const {
         body: {
           login,
-          email,
         },
-        user: {
-          id,
-        },
+        user,
         file,
       } = req;
 
-      const newUserData = {};
-      if (email?.trim()) newUserData.email = email;
-      if (login?.trim()) newUserData.login = login;
+      if (login) {
+        const existUser = await User.findOne({
+          where: {
+            login,
+          },
+        });
 
-      const user = await User.findOne({
-        where: {
-          [Op.or]: [
-            newUserData,
-          ],
-        },
-      });
-
-      if (user) {
-        return res.status(BAD_REQUEST).send(USER_EXIST);
+        if (existUser) {
+          return res.status(BAD_REQUEST).send(USER_EXIST);
+        }
       }
 
-      if (file?.path) newUserData.avatar = file?.path.replace('public/', '') || '';
       const updatedUser = await User.update(
-        newUserData,
         {
-          where: { id },
+          login: login || user.login,
+          avatar: file?.path.replace('public/', '') || user.avatar,
+        },
+        {
+          where: { id: user.id },
+          returning: true,
+          plain: true,
         },
       );
 

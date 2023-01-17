@@ -7,7 +7,7 @@ const { getUser, updateUser } = require('../controllers/user');
 const upload = require('../middleware/uploadImage');
 
 router.get('/:id', getUser);
-router.put(
+router.patch(
   '/',
   passport.authenticate('jwt', { session: false }),
   upload.single('image'),

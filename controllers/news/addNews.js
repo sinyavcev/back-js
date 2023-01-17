@@ -25,7 +25,7 @@ module.exports = {
         title,
         userId: id,
         content,
-        image: file?.path || '',
+        image: file?.path.replace('public/', '') || '',
         tags,
       });
 
